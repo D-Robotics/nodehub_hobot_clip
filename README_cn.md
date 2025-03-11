@@ -1,6 +1,3 @@
-# 文本图片特征检索
-
-
 
 
 ## 功能介绍
@@ -43,19 +40,17 @@
 ### 依赖安装
 
 ```shell
-pip3 install onnxruntime -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
-pip3 install ftfy -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
-pip3 install wcwidth -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
-pip3 install regex -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+pip3 install onnxruntime
+pip3 install ftfy
+pip3 install wcwidth
+pip3 install regex
 ```
 
-### 功能包安装
-```bash
-sudo apt update
-sudo apt install -y tros-humble-clip-encode-image
-sudo apt install -y tros-humble-clip-encode-text
-sudo apt install -y tros-humble-clip-manage
-sudo apt install -y tros-humble-clip-msgs
+### 模型下载
+```shell
+# 从Web端下载运行示例需要的模型文件。
+wget http://archive.d-robotics.cc/models/clip_encode_text/text_encoder.tar.gz
+sudo tar -xf text_encoder.tar.gz -C config
 ```
 
 ## 使用介绍
@@ -64,7 +59,7 @@ sudo apt install -y tros-humble-clip-msgs
 
 **模式1 入库**
 
-设置clip_mode为“0”, 将"config"目录下的图片文件入库, 存在"clip.db"数据库中。
+设置clip_mode为“0”, 将"/root/config"目录下的图片文件入库, 存在"clip.db"数据库中。
 
 （用户可根据需要, 更换需要入库的图片文件夹路径clip_storage_folder、存放的数据库名clip_db_file, 建议使用绝对路径。）
 
@@ -80,7 +75,7 @@ source /opt/tros/humble/setup.bash
 cp -r /opt/tros/${TROS_DISTRO}/lib/clip_encode_image/config/ .
 
 # 启动launch文件
-ros2 launch clip_manage hobot_clip_manage.launch.py clip_mode:=0 clip_db_file:=clip.db clip_storage_folder:=config
+ros2 launch clip_manage hobot_clip_manage.launch.py clip_mode:=0 clip_db_file:=clip.db clip_storage_folder:=/root/config
 ```
 
 </TabItem>
@@ -100,10 +95,6 @@ ros2 launch clip_manage hobot_clip_manage.launch.py clip_mode:=0 clip_db_file:=c
 ```shell
 # 配置ROS2环境
 source /opt/tros/humble/setup.bash
-
-# 从Web端下载运行示例需要的模型文件。
-wget http://archive.d-robotics.cc/models/clip_encode_text/text_encoder.tar.gz
-sudo tar -xf text_encoder.tar.gz -C config
 
 # 启动launch文件
 ros2 launch clip_manage hobot_clip_manage.launch.py clip_mode:=1 clip_db_file:=clip.db clip_result_folder:=result clip_text:="a diagram"
@@ -159,8 +150,8 @@ python -m http.server 8080
 
 **检索结果可视化**
 
-在PC端的浏览器输入http://IP:8000 即可查看图像检索结果（IP为设备IP地址）。
+在PC端的浏览器输入http://IP:8080 即可查看图像检索结果（IP为设备IP地址）。
 
-![](imgs/query_display.png)
+![](/../static/img/05_Robot_development/03_boxs/function/image/box_adv/query_display.png)
 
 结果分析：按顺序依次可以看到检索文本与图片相似度依次检索结果。其中只有CLIP.png图片为本示例提供, 其他图片为用户实际config中图片, 因此预期可视化结果中只有首张图与示例中相同。
